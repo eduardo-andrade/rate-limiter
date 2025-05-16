@@ -69,6 +69,7 @@ Isso vai iniciar o Redis e o serviço Go, expondo a aplicação na porta 8080.
 ```
 http://localhost:8080/test/run?testType=ip&requests=10&interval=100&maxAllowed=5&ip=127.0.0.1
 ```
+- O Rate Limiter é muito robusto, permitindo testes com valores altos e baixo intervalo entre as requisições.
 
 ## Possíveis Erros e Soluções
 
