@@ -92,8 +92,17 @@ curl "http://localhost:8080/test/run?testType=ip&ip=127.0.0.1&requests=10&interv
 curl "http://localhost:8080/test/run?testType=token&token=mytoken123&requests=15&interval=50&maxAllowed=10"
 ```
 
+- Exemplo de saída do teste:
+```
+Test Type: ip
+Key: ip:127.0.0.1
+Requests: 10
+Interval: 100ms
+Allowed: 5
+Blocked: 5
+```
 
-- O Rate Limiter é muito robusto, permitindo testes com valores altos e baixo intervalo entre as requisições.
+- O Rate Limiter é muito robusto, permitindo testes com valores altos para quantidade de tentativas de requisição e baixo intervalo entre elas.
 
 ## Possíveis Erros e Soluções
 
