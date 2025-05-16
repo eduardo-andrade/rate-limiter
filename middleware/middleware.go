@@ -8,9 +8,19 @@ import (
 	"github.com/eduardo-andrade/rate-limiter/limiter"
 )
 
-func RateLimiterMiddleware(limiter *limiter.Limiter, cfg *config.Config) func(http.Handler) http.Handler {
+func RateLimiterMiddleware(limiter *limiter.Limiter, cfg *config.Config, skipPaths []string) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+			// Verifica se a rota atual está na lista de rotas a ignorar
+			for _, p := range skipPaths {
+				if strings.HasPrefix(r.URL.Path, p) {
+					// pula o rate limiter para esta rota
+					next.ServeHTTP(w, r)
+					return
+				}
+			}
+
 			ctx := r.Context()
 
 			if cfg.EnableTokenLimiter {

@@ -8,25 +8,25 @@ import (
 )
 
 type Limiter struct {
-	storage    storage.Storage
-	ipLimit    int
-	ipExpiry   int64
-	tokenLimit int
+	storage     storage.Storage
+	ipLimit     int
+	ipExpiry    int64
+	tokenLimit  int
 	tokenExpiry int64
 }
 
 func NewLimiter(storage storage.Storage, ipLimit, tokenLimit int, ipExpiry, tokenExpiry time.Duration) *Limiter {
 	return &Limiter{
-		storage:    storage,
-		ipLimit:    ipLimit,
-		ipExpiry:   int64(ipExpiry.Seconds()),
-		tokenLimit: tokenLimit,
+		storage:     storage,
+		ipLimit:     ipLimit,
+		ipExpiry:    int64(ipExpiry.Seconds()),
+		tokenLimit:  tokenLimit,
 		tokenExpiry: int64(tokenExpiry.Seconds()),
 	}
 }
 
 func (l *Limiter) AllowRequest(ctx context.Context, identifier string, isToken bool) (bool, error) {
-	
+
 	blocked, err := l.storage.IsBlocked(ctx, identifier)
 	if err != nil {
 		return false, err

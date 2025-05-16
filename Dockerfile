@@ -13,7 +13,8 @@ FROM alpine:latest
 WORKDIR /app
 
 COPY --from=builder /app/rate-limiter .
-COPY .env .
+COPY --from=builder /app/.env .
+COPY --from=builder /app/web ./web
 
 EXPOSE 8080
 

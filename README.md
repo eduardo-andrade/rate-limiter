@@ -1,35 +1,89 @@
-# Rate Limiter in Go
 
-A configurable rate limiter middleware for Go web applications that can limit requests based on IP address or API tokens.
+# Projeto Rate Limiter
 
-## Features
+Este projeto em Go implementa um serviço de rate limiting (limitação de taxa de requisições) utilizando Redis como backend para armazenamento e controle. O sistema permite limitar requisições por IP e por token, ajudando a proteger APIs e aplicações contra abuso e excesso de chamadas.
 
-- IP-based rate limiting
-- Token-based rate limiting (with higher priority)
-- Redis-backed storage
-- Configurable limits and expiration times
-- Docker support
+## Estrutura de Diretórios
+```
+rate-limiter/
+├── config/
+├── limiter/
+├── middleware/
+├── storage/
+├── web/
+│   └── test.html
+├── main.go
+├── go.mod
+├── go.sum
+├── Dockerfile
+├── docker-compose.yml
+└── README.md
+```
 
-## Configuration
+## Requisitos
+- Go 1.21 ou superior
+- Docker e Docker Compose (opcional, para rodar via containers)
+- Redis (pode ser local ou via container Docker)
 
-Configure the rate limiter using environment variables:
+## Instalação
 
-- `REDIS_ADDR`: Redis server address (default: `localhost:6379`)
-- `ENABLE_IP_LIMITER`: Enable IP-based limiting (default: `true`)
-- `IP_LIMIT`: Maximum requests per IP (default: `5`)
-- `IP_EXPIRATION`: IP limit expiration in seconds (default: `300`)
-- `ENABLE_TOKEN_LIMITER`: Enable token-based limiting (default: `true`)
-- `TOKEN_LIMIT`: Maximum requests per token (default: `10`)
-- `TOKEN_EXPIRATION`: Token limit expiration in seconds (default: `300`)
+1. **Clone o repositório**:
+```bash
+git clone <url-do-repositorio>
+cd rate-limiter
+```
 
-## Running with Docker
+2. **Baixe as dependências Go**:
+```bash
+go mod tidy
+```
 
-1. Copy `.env.example` to `.env` and adjust settings if needed
-2. Run: `docker-compose up --build`
+## Execução
 
-## Testing
+### Rodando localmente
 
-- For IP limiting: Make multiple requests from the same IP
-- For token limiting: Include `API_KEY: <TOKEN>` header in requests
+Configure a variável de ambiente `REDIS_ADDR` apontando para sua instância Redis (exemplo: `localhost:6379`):
 
-When limits are exceeded, the server responds with HTTP 429 status code.
+```bash
+export REDIS_ADDR=localhost:6379
+go run main.go
+```
+
+O servidor vai iniciar na porta 8080.
+
+### Rodando via Docker Compose
+
+Construa e suba os containers com:
+
+```bash
+docker compose up --build
+```
+
+Isso vai iniciar o Redis e o serviço Go, expondo a aplicação na porta 8080.
+
+## Testando o Rate Limiter
+
+- Acesse o endpoint `/test` para abrir a página HTML de testes.
+- Acesse `/test/run` com os parâmetros `testType` (ip ou token), `requests`, `interval`, `maxAllowed`, `ip` e `token` para realizar testes programáticos.
+- Exemplo:
+```
+http://localhost:8080/test/run?testType=ip&requests=10&interval=100&maxAllowed=5&ip=127.0.0.1
+```
+
+## Possíveis Erros e Soluções
+
+- **Erro ao conectar no Redis localmente:**
+  - Certifique-se de que o Redis está rodando na máquina ou ajuste `REDIS_ADDR` para apontar corretamente.
+  - Exemplo: `export REDIS_ADDR=localhost:6379`
+
+- **Erro ao rodar `docker compose`:**
+  - Use o comando `docker compose` sem hífen (não `docker-compose`), pois versões recentes do Docker mudaram o comando.
+  - Confirme que o Docker está rodando e que você tem permissão para usar o Docker.
+
+- **Arquivo `test.html` não encontrado dentro do container:**
+  - Certifique-se que o Dockerfile copia a pasta `web` corretamente para o container.
+  - Veja o Dockerfile no repositório para garantir que `COPY web ./web` está presente.
+
+## Considerações Finais
+
+Este projeto serve para controlar a taxa de requisições em APIs, evitando abusos e sobrecarga. Pode ser estendido para diferentes estratégias de limitação e integração com sistemas maiores.

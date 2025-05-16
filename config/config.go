@@ -10,13 +10,13 @@ import (
 )
 
 type Config struct {
-	RedisAddr         string
-	EnableIPLimiter   bool
-	IPLimit           int
-	IPExpiration      time.Duration
+	RedisAddr          string
+	EnableIPLimiter    bool
+	IPLimit            int
+	IPExpiration       time.Duration
 	EnableTokenLimiter bool
-	TokenLimit        int
-	TokenExpiration   time.Duration
+	TokenLimit         int
+	TokenExpiration    time.Duration
 }
 
 func LoadConfig() *Config {
@@ -25,13 +25,13 @@ func LoadConfig() *Config {
 	}
 
 	return &Config{
-		RedisAddr:         getEnv("REDIS_ADDR", "localhost:6379"),
-		EnableIPLimiter:   getEnvAsBool("ENABLE_IP_LIMITER", true),
-		IPLimit:           getEnvAsInt("IP_LIMIT", 5),
-		IPExpiration:      getEnvAsDuration("IP_EXPIRATION", 5*time.Minute),
+		RedisAddr:          getEnv("REDIS_ADDR", "localhost:6379"),
+		EnableIPLimiter:    getEnvAsBool("ENABLE_IP_LIMITER", true),
+		IPLimit:            getEnvAsInt("IP_LIMIT", 5),
+		IPExpiration:       getEnvAsDuration("IP_EXPIRATION", 5*time.Minute),
 		EnableTokenLimiter: getEnvAsBool("ENABLE_TOKEN_LIMITER", true),
-		TokenLimit:        getEnvAsInt("TOKEN_LIMIT", 10),
-		TokenExpiration:   getEnvAsDuration("TOKEN_EXPIRATION", 5*time.Minute),
+		TokenLimit:         getEnvAsInt("TOKEN_LIMIT", 10),
+		TokenExpiration:    getEnvAsDuration("TOKEN_EXPIRATION", 5*time.Minute),
 	}
 }
 

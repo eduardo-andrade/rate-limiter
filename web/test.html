@@ -1,46 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rate Limiter Test Interface</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 2rem;
-      background-color: #f9f9f9;
-    }
-    h1 {
-      color: #333;
-    }
-    button {
-      margin: 0.5rem 0;
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-    }
-    pre {
-      background-color: #eee;
-      padding: 1rem;
-      margin-top: 1rem;
-      white-space: pre-wrap;
-      border-radius: 5px;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <title>Rate Limiter Test</title>
 </head>
 <body>
-  <h1>Rate Limiter - Testes Automatizados</h1>
-  <button onclick="runTest('/test/ip')">Testar Limite por IP</button>
-  <button onclick="runTest('/test/token')">Testar Limite por Token</button>
-  <button onclick="runTest('/test/expiration')">Testar Reset por Expiração</button>
+    <h1>Rate Limiter Test</h1>
 
-  <pre id="output">Clique em um botão para executar o teste.</pre>
+    <form id="testForm">
+        <label>
+            Tipo de Teste:
+            <select id="testType" name="testType">
+                <option value="ip">IP</option>
+                <option value="token">Token</option>
+            </select>
+        </label>
+        <br/><br/>
 
-  <script>
-    async function runTest(endpoint) {
-      const res = await fetch(endpoint);
-      const text = await res.text();
-      document.getElementById('output').textContent = text;
-    }
-  </script>
+        <label>
+            IP (se teste for IP):
+            <input type="text" id="ip" name="ip" placeholder="127.0.0.1" />
+        </label>
+        <br/><br/>
+
+        <label>
+            Token (se teste for Token):
+            <input type="text" id="token" name="token" placeholder="API_KEY" />
+        </label>
+        <br/><br/>
+
+        <label>
+            Número de Requisições:
+            <input type="number" id="requests" name="requests" value="10" min="1" />
+        </label>
+        <br/><br/>
+
+        <label>
+            Intervalo entre requisições (ms):
+            <input type="number" id="interval" name="interval" value="100" min="0" />
+        </label>
+        <br/><br/>
+
+        <label>
+            Máximo de requisições permitidas:
+            <input type="number" id="maxAllowed" name="maxAllowed" value="5" min="0" />
+        </label>
+        <br/><br/>
+
+        <button type="submit">Executar Teste</button>
+    </form>
+
+    <h2>Resultado:</h2>
+    <pre id="result"></pre>
+
+    <script>
+        document.getElementById('testForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const testType = document.getElementById('testType').value;
+            const ip = document.getElementById('ip').value;
+            const token = document.getElementById('token').value;
+            const requests = document.getElementById('requests').value;
+            const interval = document.getElementById('interval').value;
+            const maxAllowed = document.getElementById('maxAllowed').value;
+
+            let params = new URLSearchParams();
+            params.append('testType', testType);
+            params.append('requests', requests);
+            params.append('interval', interval);
+            params.append('maxAllowed', maxAllowed);
+
+            if(testType === 'ip') {
+                params.append('ip', ip);
+            } else if(testType === 'token') {
+                params.append('token', token);
+            }
+
+            const response = await fetch('/test/run?' + params.toString());
+            const text = await response.text();
+
+            document.getElementById('result').textContent = text;
+        });
+    </script>
 </body>
 </html>

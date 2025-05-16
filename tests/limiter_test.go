@@ -2,12 +2,12 @@ package tests
 
 import (
 	"context"
-	"testing"
-	"time"
-	"net/http"
-	"net/http/httptest"
 	"github.com/eduardo-andrade/rate-limiter/limiter"
 	"github.com/eduardo-andrade/rate-limiter/storage"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+	"time"
 )
 
 func setupTestLimiter(t *testing.T) *limiter.Limiter {
