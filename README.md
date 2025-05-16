@@ -24,6 +24,7 @@ rate-limiter/
 - Go 1.21 ou superior
 - Docker e Docker Compose (opcional, para rodar via containers)
 - Redis (pode ser local ou via container Docker)
+- Curl (pacote que permite a realização de requisições via terminal)
 
 ## Instalação
 
@@ -69,6 +70,29 @@ Isso vai iniciar o Redis e o serviço Go, expondo a aplicação na porta 8080.
 ```
 http://localhost:8080/test/run?testType=ip&requests=10&interval=100&maxAllowed=5&ip=127.0.0.1
 ```
+- Para testar via terminal, os parâmetros de teste são definidos através de variáveis de ambiente. Defina os valores no arquivo .env para realizar o seu teste:
+
+```
+REDIS_ADDR=redis:6379
+ENABLE_IP_LIMITER=true
+IP_LIMIT=5 // limite de requisições considerando o IP até o limiter começar a barrar
+IP_EXPIRATION=300 
+ENABLE_TOKEN_LIMITER=true
+TOKEN_LIMIT=10
+TOKEN_EXPIRATION=300 // limite de requisições considerando o TOKEN até o limiter começar a barrar
+```
+
+- Para testar via terminal, utilize o comando `curl`:
+```
+curl "http://localhost:8080/test/run?testType=ip&ip=127.0.0.1&requests=10&interval=100"
+```
+
+- É póssível também utilizar o parâmetro `maxAllowed` para passar manualmente na requisição a quantidade de requisições que devem ser aceitas, exemplo:
+```
+curl "http://localhost:8080/test/run?testType=token&token=mytoken123&requests=15&interval=50&maxAllowed=10"
+```
+
+
 - O Rate Limiter é muito robusto, permitindo testes com valores altos e baixo intervalo entre as requisições.
 
 ## Possíveis Erros e Soluções
