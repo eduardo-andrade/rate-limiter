@@ -9,6 +9,9 @@ import (
 	"github.com/eduardo-andrade/rate-limiter/limiter"
 	"github.com/eduardo-andrade/rate-limiter/middleware"
 	"github.com/eduardo-andrade/rate-limiter/storage"
+	"github.com/eduardo-andrade/rate-limiter/tests"
+	"github.com/eduardo-andrade/rate-limiter/web"
+	
 )
 
 func main() {
@@ -28,9 +31,30 @@ func main() {
 	)
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello, World!"))
-	})
+
+	mux.HandleFunc("/test/ip", func(w http.ResponseWriter, r *http.Request) {
+	results := tests.TestIPRateLimiter(rateLimiter, cfg)
+	w.Write([]byte(results))
+})
+
+mux.HandleFunc("/test/token", func(w http.ResponseWriter, r *http.Request) {
+	results := tests.TestTokenRateLimiter(rateLimiter, cfg)
+	w.Write([]byte(results))
+})
+
+mux.HandleFunc("/test/expiration", func(w http.ResponseWriter, r *http.Request) {
+	results := tests.TestExpiration(rateLimiter, cfg)
+	w.Write([]byte(results))
+})
+
+mux.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "web/test.html")
+})
+
+	mux.HandleFunc("/api", func(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Você acessou a rota /api"))
+})
+
 
 	handler := middleware.RateLimiterMiddleware(rateLimiter, cfg)(mux)
 

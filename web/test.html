@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rate Limiter Test Interface</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      color: #333;
+    }
+    button {
+      margin: 0.5rem 0;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+    }
+    pre {
+      background-color: #eee;
+      padding: 1rem;
+      margin-top: 1rem;
+      white-space: pre-wrap;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Rate Limiter - Testes Automatizados</h1>
+  <button onclick="runTest('/test/ip')">Testar Limite por IP</button>
+  <button onclick="runTest('/test/token')">Testar Limite por Token</button>
+  <button onclick="runTest('/test/expiration')">Testar Reset por Expiração</button>
+
+  <pre id="output">Clique em um botão para executar o teste.</pre>
+
+  <script>
+    async function runTest(endpoint) {
+      const res = await fetch(endpoint);
+      const text = await res.text();
+      document.getElementById('output').textContent = text;
+    }
+  </script>
+</body>
+</html>

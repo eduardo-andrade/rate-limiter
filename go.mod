@@ -2,6 +2,14 @@ module github.com/eduardo-andrade/rate-limiter
 
 go 1.21
 
+replace github.com/eduardo-andrade/rate-limiter/middleware => ./middleware
+
+replace github.com/eduardo-andrade/rate-limiter/config => ./config
+
+replace github.com/eduardo-andrade/rate-limiter/limiter => ./limiter
+
+replace github.com/eduardo-andrade/rate-limiter/storage => ./storage
+
 require (
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/joho/godotenv v1.5.1
